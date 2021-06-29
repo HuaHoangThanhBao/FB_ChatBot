@@ -1,0 +1,171 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt lịch tư vấn</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+
+    <!-- <link href="/js/date-time-picker/dist/css/date-time-picker-component.min.css" rel="stylesheet" />
+    <script src="/js/date-time-picker/dist/js/date-time-picker-component.min.js"></script> -->
+
+    <script src="/js/book-appointment.js"></script>
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="container">
+            <div class="header">
+                <h1>Đặt lịch tư vấn</h1>
+            </div>
+            <div class="row">
+                <div class="wrapper">
+                    <div class="container-calendar">
+                        <div class="button-container-calendar">
+                            <div class="col">
+                                <p id="monthAndYear"></p>
+                            </div>
+                            <div class="col">
+                                <button id="previous">&#8249;</button>
+                                <button id="next">&#8250;</button>
+                            </div>
+                        </div>
+
+                        <table class="table-calendar" id="calendar" data-lang="en">
+                            <thead id="thead-month"></thead>
+                            <tbody id="calendar-body"></tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="wrapper">
+                    <div class="header-pass flex">
+                        <div class="col">
+                            <button class="prevPage"><i class="fa fa-arrow-left"></i></button>
+                        </div>
+                        <div class="col">
+                            <p class="day-pass">Ngày tư vấn: </p>
+                            <p id="month-year-pass-one" class="month-year-pass"></p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="header-pass">
+                        <h2>Chọn thời gian</h2>
+                        <ul class="btn-confirm-group">
+                            <li class="btn-confirm-item">
+                                <button class="btn btn-time">09:00</button>
+                                <button class="btn btn-choose" value="09:00">Chọn</button>
+                            </li>
+                            <li class="btn-confirm-item">
+                                <button class="btn btn-time">10:00</button>
+                                <button class="btn btn-choose" value="10:00">Chọn</button>
+                            </li>
+                            <li class="btn-confirm-item">
+                                <button class="btn btn-time">11:00</button>
+                                <button class="btn btn-choose" value="11:00">Chọn</button>
+                            </li>
+                            <li class="btn-confirm-item">
+                                <button class="btn btn-time">11:30</button>
+                                <button class="btn btn-choose" value="11:30">Chọn</button>
+                            </li>
+                            <li class="btn-confirm-item">
+                                <button class="btn btn-time">13:00</button>
+                                <button class="btn btn-choose" value="13:00">Chọn</button>
+                            </li>
+                            <li class="btn-confirm-item">
+                                <button class="btn btn-time">14:00</button>
+                                <button class="btn btn-choose" value="14:00">Chọn</button>
+                            </li>
+                            <li class="btn-confirm-item">
+                                <button class="btn btn-time">15:00</button>
+                                <button class="btn btn-choose" value="15:00">Chọn</button>
+                            </li>
+                            <li class="btn-confirm-item">
+                                <button class="btn btn-time">16:00</button>
+                                <button class="btn btn-choose" value="16:00">Chọn</button>
+                            </li>
+                            <li class="btn-confirm-item">
+                                <button class="btn btn-time">17:00</button>
+                                <button class="btn btn-choose" value="17:00">Chọn</button>
+                            </li>
+                            <li class="btn-confirm-item">
+                                <button class="btn btn-time">18:00</button>
+                                <button class="btn btn-choose" value="18:00">Chọn</button>
+                            </li>
+                            <li class="btn-confirm-item">
+                                <button class="btn btn-time">20:00</button>
+                                <button class="btn btn-choose" value="20:00">Chọn</button>
+                            </li>
+                            <li class="btn-confirm-item">
+                                <button class="btn btn-time">21:00</button>
+                                <button class="btn btn-choose" value="21:00">Chọn</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="wrapper">
+                    <div class="header-pass flex">
+                        <div class="col">
+                            <button class="prevPage"><i class="fa fa-arrow-left"></i></button>
+                        </div>
+                        <div class="col non-flex">
+                            <div class="row-col">
+                                <p class="day-pass">Ngày tư vấn: </p>
+                                <p id="month-year-pass-two" class="month-year-pass"></p>
+                            </div>
+                            <div class="row-col">
+                                <p class="time-pass"><i class="fa fa-clock-o"></i>Giờ tư vấn: </p>
+                                <p id="time-pass" class="month-year-pass"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    
+                    <div class="header-pass normal">
+                        <h2>Thông tin liên hệ</h2>
+
+                        <div class="form-detail-container">
+                            <input type="text" id="psid" hidden>
+        
+                            <div class="form-group">
+                                <label for="customerName">Họ và tên<span class="required"> *</span></label>
+                                <input type="text" id="customerName" class="form-control" placeholder="Họ và tên...">
+                            </div>
+        
+                            <div class="form-group">
+                                <label for="customerEmail">Email<span class="required"> *</span></label>
+                                <input type="email" id="customerEmail" class="form-control" placeholder="Email...">
+                            </div>
+        
+                            <div class="form-group">
+                                <label for="customerPhone">Số điện thoại<span class="required"> *</span></label>
+                                <input type="number" id="customerPhone" class="form-control" placeholder="Số điện thoại...">
+                            </div>
+        
+                            <button class="btn btn-primary-submit" id="btnDatLichTuVan">Đặt lịch tư vấn</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="f-wrapper">
+            <span>Copyright © 2020 Of Doslink Migration & Investment</span>
+        </div>
+    </footer>
+
+    <script src="/js/calendar.js"></script>
+</body>
+
+</html>
