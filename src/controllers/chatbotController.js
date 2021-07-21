@@ -6,6 +6,10 @@ const fs = require('fs');
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
+/*Những thay đổi ngày 15/07/2021 làm theo
+  version FBChatbot V07.21
+*/
+
 let getHomePage = (req, res) => {
   return res.render("homepage.ejs");
 };
@@ -124,7 +128,7 @@ function handleMessage(sender_psid, received_message) {
 }
 
 //Handle messaging_postbacks events
-async function handlePostback(sender_psid, received_postback) {
+function handlePostback(sender_psid, received_postback) {
   let response;
 
   // Get the payload for the postback
@@ -141,52 +145,52 @@ async function handlePostback(sender_psid, received_postback) {
 
     case "RESTART_BOT":
     case "GET_STARTED":
-      await chatbotService.handleGetStarted(sender_psid);
+      chatbotService.handleGetStarted(sender_psid).then(message => console.log(message));
       break;
 
     case "TALK_TO_AGENT":
-      await chatbotService.handleSendLiveChat(sender_psid);
+      chatbotService.handleSendLiveChat(sender_psid).then(message => console.log(message));
       break;
       
-    case "VISA_UC":
-      await chatbotService.handleSendVisaUc(sender_psid);
-      break;
-    case "VISA_CANADA":
-      await chatbotService.handleSendVisaCanada(sender_psid);
-      break;
-    case "VISA_KHAC_LIVE_CHAT":
-      await chatbotService.handleSendVisaKhac(sender_psid);
-      break;
-    case "VISA_KHAC":
-      await chatbotService.handleSendDatLichTuVan(sender_psid, 'Visa khác');
-      break;
+    // case "VISA_UC":
+    //   await chatbotService.handleSendVisaUc(sender_psid);
+    //   break;
+    // case "VISA_CANADA":
+    //   await chatbotService.handleSendVisaCanada(sender_psid);
+    //   break;
+    // case "VISA_KHAC_LIVE_CHAT":
+    //   await chatbotService.handleSendVisaKhac(sender_psid);
+    //   break;
+    // case "VISA_KHAC":
+    //   await chatbotService.handleSendDatLichTuVan(sender_psid, 'Visa khác');
+    //   break;
 
-    case "TU_VAN_NGAY_BAY_GIO":
-      await chatbotService.handleSendTuVanNgayBayGio(sender_psid, true);
-      break;
-    case "DAT_LICH_TU_VAN":
-      await chatbotService.handleSendTuVanNgayBayGio(sender_psid, false);
-      break;
+    // case "TU_VAN_NGAY_BAY_GIO":
+    //   await chatbotService.handleSendTuVanNgayBayGio(sender_psid, true);
+    //   break;
+    // case "DAT_LICH_TU_VAN":
+    //   await chatbotService.handleSendTuVanNgayBayGio(sender_psid, false);
+    //   break;
 
-    case 'DAU_TU_UC':
-      await chatbotService.handleSendDatLichTuVan(sender_psid, 'Đầu tư Úc');
-    break;
-    case 'TAY_NGHE_UC':
-      await chatbotService.handleSendDatLichTuVan(sender_psid, 'Tay nghề Úc');
-    break;
-    case 'Du_HOC_UC':
-      await chatbotService.handleSendDatLichTuVan(sender_psid, 'Du học Úc');
-    break;
+    // case 'DAU_TU_UC':
+    //   await chatbotService.handleSendDatLichTuVan(sender_psid, 'Đầu tư Úc');
+    // break;
+    // case 'TAY_NGHE_UC':
+    //   await chatbotService.handleSendDatLichTuVan(sender_psid, 'Tay nghề Úc');
+    // break;
+    // case 'Du_HOC_UC':
+    //   await chatbotService.handleSendDatLichTuVan(sender_psid, 'Du học Úc');
+    // break;
 
-    case 'DAU_TU_CANADA':
-      await chatbotService.handleSendDatLichTuVan(sender_psid, 'Đầu tư Canada');
-    break;
-    case 'TAY_NGHE_CANADA':
-      await chatbotService.handleSendDatLichTuVan(sender_psid, 'Tay nghề Canada');
-    break;
-    case 'DU_HOC_CANADA':
-      await chatbotService.handleSendDatLichTuVan(sender_psid, 'Du học Canada');
-    break;
+    // case 'DAU_TU_CANADA':
+    //   await chatbotService.handleSendDatLichTuVan(sender_psid, 'Đầu tư Canada');
+    // break;
+    // case 'TAY_NGHE_CANADA':
+    //   await chatbotService.handleSendDatLichTuVan(sender_psid, 'Tay nghề Canada');
+    // break;
+    // case 'DU_HOC_CANADA':
+    //   await chatbotService.handleSendDatLichTuVan(sender_psid, 'Du học Canada');
+    // break;
 
     default:
       response = {
@@ -270,7 +274,7 @@ let setupPersistentMenu = async (req, res) => {
           {
             type: "web_url",
             title: "Doslink Facebook Page",
-            url: "https://www.facebook.com/DoslinkVietnam",
+            url: "https://www.facebook.com/DoslinkEducation",
             webview_height_ratio: "full",
           },
           {

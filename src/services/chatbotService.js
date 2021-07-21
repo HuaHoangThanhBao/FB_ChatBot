@@ -27,94 +27,161 @@ let getVisaType = () => {
   return visaType;
 }
 
-let callSendAPI = async (sender_psid, response) => {
-  return new Promise(async (resolve, reject) => {
-    try {
+let callSendAPI = (sender_psid, response) => {
+  return new Promise((resolve, reject) => {
+    // Construct the message body
+    let request_body = {
+      recipient: {
+        id: sender_psid,
+      },
+      message: response,
+    };
+
+    // Send the HTTP request to the Messenger Platform
+    request(
+      {
+        uri: "https://graph.facebook.com/v2.6/me/messages",
+        qs: { access_token: PAGE_ACCESS_TOKEN },
+        method: "POST",
+        json: request_body,
+      },
+      (err, res, body) => {
+        if (!err) {
+          console.log("Gọi hàm callSendAPI thành công!");
+          resolve("Gọi hàm callSendAPI thành công!");
+        } else {
+          console.log("Unable to send message:" + err);
+          reject("Gọi hàm callSendAPI thất bại: " + err);
+        }
+      }
+    );
+  })
+};
+
+
+let callSendToSlackAPI = (response) => {
+  return new Promise((resolve, reject) => {
+    request(
+      {
+        uri: "https://hook.integromat.com/1zp3us9nefdseim3fljapnmciynxtxgu",
+        method: "POST",
+        json: response,
+      },
+      (err, res, body) => {
+        if (!err) {
+          humanChat = true;
+          console.log("Đã gửi thông báo đến Slack!");
+          resolve("Đã gửi thông báo đến Slack!");
+        } else {
+          console.log("Lỗi khi gửi thông báo đến Slack: " + err);
+          reject("Lỗi khi gửi thông báo đến Slack: " + err);
+        }
+      }
+    );
+  })
+}
+
+
+/**Using passing thread control from facebook API */
+let callSendLiveChatAPI = (sender_psid) => {
+  return new Promise((resolve, reject) => {
+    try{
       // Construct the message body
       let request_body = {
         recipient: {
           id: sender_psid,
         },
-        message: response,
+        timestamp: 1458692752478,
+        pass_thread_control: {
+          new_owner_app_id: PAGE_INBOX_ID,
+          metadata: "Additional content that the caller wants to set",
+        },
       };
-
-      await sendMarkReadMessage(sender_psid);
-      await sendTypingOn(sender_psid);
-
+  
       // Send the HTTP request to the Messenger Platform
       request(
         {
-          uri: "https://graph.facebook.com/v2.6/me/messages",
+          uri: "https://graph.facebook.com/v2.6/me/pass_thread_control",
           qs: { access_token: PAGE_ACCESS_TOKEN },
           method: "POST",
           json: request_body,
         },
         (err, res, body) => {
           if (!err) {
-            resolve("message sent!");
+            humanChat = true;
+            resolve("pass thread control successfully");
           } else {
-            resolve("Unable to send message:" + err);
+            reject("Unable to pass thread control:" + err);
           }
         }
       );
-    } catch (e) {
+    }
+    catch(e){
       reject(e);
     }
   });
 };
 
 let sendTypingOn = (sender_psid) => {
-  // Construct the message body
-  let request_body = {
-    recipient: {
-      id: sender_psid,
-    },
-    sender_action: "typing_on",
-  };
+  return new Promise((resolve, reject) => {
+    // Construct the message body
+    let request_body = {
+      recipient: {
+        id: sender_psid,
+      },
+      sender_action: "typing_on",
+    };
 
-  // Send the HTTP request to the Messenger Platform
-  request(
-    {
-      uri: "https://graph.facebook.com/v2.6/me/messages",
-      qs: { access_token: PAGE_ACCESS_TOKEN },
-      method: "POST",
-      json: request_body,
-    },
-    (err, res, body) => {
-      if (!err) {
-        console.log("typing on sent!");
-      } else {
-        console.error("Unable to send typing on message:" + err);
+    // Send the HTTP request to the Messenger Platform
+    request(
+      {
+        uri: "https://graph.facebook.com/v2.6/me/messages",
+        qs: { access_token: PAGE_ACCESS_TOKEN },
+        method: "POST",
+        json: request_body,
+      },
+      (err, res, body) => {
+        if (!err) {
+          console.log("Hiệu ứng typing on sent đã được gửi!");
+          resolve("Hiệu ứng typing on sent đã được gửi!");
+        } else {
+          console.error("Lỗi khi gửi hiệu ứng typing on sent:" + err);
+          reject("Lỗi khi gửi hiệu ứng typing on sent:" + err);
+        }
       }
-    }
-  );
+    );
+  })
 };
 
 let sendMarkReadMessage = (sender_psid) => {
-  // Construct the message body
-  let request_body = {
-    recipient: {
-      id: sender_psid,
-    },
-    sender_action: "mark_seen",
-  };
+  return new Promise((resolve, reject) => {
+    // Construct the message body
+    let request_body = {
+      recipient: {
+        id: sender_psid,
+      },
+      sender_action: "mark_seen",
+    };
 
-  // Send the HTTP request to the Messenger Platform
-  request(
-    {
-      uri: "https://graph.facebook.com/v2.6/me/messages",
-      qs: { access_token: PAGE_ACCESS_TOKEN },
-      method: "POST",
-      json: request_body,
-    },
-    (err, res, body) => {
-      if (!err) {
-        console.log("mark seen sent!");
-      } else {
-        console.error("Unable to mark seen message:" + err);
+    // Send the HTTP request to the Messenger Platform
+    request(
+      {
+        uri: "https://graph.facebook.com/v2.6/me/messages",
+        qs: { access_token: PAGE_ACCESS_TOKEN },
+        method: "POST",
+        json: request_body,
+      },
+      (err, res, body) => {
+        if (!err) {
+          console.log("Hiệu ứng mark seen đã gửi thành công!");
+          resolve("Hiệu ứng mark seen đã gửi thành công!");
+        } else {
+          console.error("Lỗi khi gửi hiệu ứng mark seen: " + err);
+          reject("Lỗi khi gửi hiệu ứng mark seen: " + err);
+        }
       }
-    }
-  );
+    );
+  })
 };
 
 let getUsername = async (sender_psid) => {
@@ -139,65 +206,87 @@ let getUsername = async (sender_psid) => {
   });
 };
 
-let handleGetStarted = (sender_psid) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      //let username = await getUsername(sender_psid);
+let handleGetStarted = async (sender_psid) => {
+  //let username = await getUsername(sender_psid);
+  
+  // let helloResponse = {
+  //   text: `
+  //   Chào anh/chị, anh/chị vui lòng chờ trong ít phút để kết nối với Quản lý trang.
+  //   \n---------------------
+  //   \nDoslink hotline: 0909 144 029
+  //   `,
+  // };
 
-      let helloResponse = {
-        text: `Chào mừng Quý khách đến với Công ty Tư vấn Đầu tư Doslink!`,
-      };
+  let alertResponse = {
+    text: `Đang có KH chờ trên trang FB DMSI`
+  }//
 
-      let alertResponse = {
-        text: `Đang có khách hàng chat trên FB Chat`
-      }
+  //let startedTemplateResponse = getStartedTemplate();
+  //let response2 = getStartedQuickReplyTemplate();
 
-      let startedTemplateResponse = getStartedTemplate();
-      //let response2 = getStartedQuickReplyTemplate();
+  //Refresh lại 2 biến toàn cục
+  tuVanNgayBayGio = false;
+  humanChat = false;
 
-      //Refresh lại 2 biến toàn cục
-      tuVanNgayBayGio = false;
-      humanChat = false;
+  await sendMarkReadMessage(sender_psid);
 
-      //Send text message
-      await callSendAPI(sender_psid, helloResponse);
+  await sendTypingOn(sender_psid);
+  //Send text message
+  //await callSendAPI(sender_psid, helloResponse);
 
-      //Send generic template message
-      await callSendAPI(sender_psid, startedTemplateResponse);
+  await callSendAPI(sender_psid, callTemplate());
 
-      //Send alert message to slack webhook
-      await handleSendAlertToSlack(alertResponse);
+  //Send generic template message
+  //await callSendAPI(sender_psid, startedTemplateResponse);
 
-      resolve("done");
-    } catch (e) {
-      reject(e);
-    }
-  });
+  //Send alert message to slack webhook
+  await callSendToSlackAPI(alertResponse);//
+
+  return 'Đã gửi tin nhắn template đến khách';
 };
 
-let handleSendAlertToSlack = async(response) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      // Send the HTTP request to the Messenger Platform
-      request(
-        {
-          uri: "https://hook.integromat.com/1zp3us9nefdseim3fljapnmciynxtxgu",
-          method: "POST",
-          json: response,
-        },
-        (err, res, body) => {
-          if (!err) {
-            humanChat = true;
-            resolve("Send alert successfully");
-          } else {
-            resolve("Unable to send alert:" + err);
+let handleSendLiveChat = async (sender_psid) => {
+  
+  await sendMarkReadMessage(sender_psid);
+
+  await sendTypingOn(sender_psid);
+
+  await callSendLiveChatAPI(sender_psid);
+
+  return 'Đã yêu cầu live chat thành công!';//
+}
+
+let callTemplate = () => {
+  let response = {
+    attachment: {
+      "type": "template",
+      "payload": {
+        "template_type": "button",
+        "text": `
+        Chào anh/chị, anh/chị vui lòng chờ trong ít phút để kết nối với Quản lý trang.
+        \n----------------------
+        \nHoặc gọi ngay hotline:`,
+        "buttons": [
+          {
+            "type": "phone_number",
+            "title": "Đầu tư Úc",
+            "payload": "+840918375365"
+          },
+          {
+            "type": "phone_number",
+            "title": "Đầu tư Canada",
+            "payload": "+840943285001"
+          },
+          {
+            "type": "phone_number",
+            "title": "Tay nghề Úc & Canada",
+            "payload": "+840909144029"
           }
-        }
-      );
-    } catch (e) {
-      reject(e);
-    }
-  });
+        ]
+      }
+    },
+  };
+  return response;
 }
 
 let getStartedTemplate = () => {
@@ -548,49 +637,6 @@ let handleSendDatLichTuVan = async(sender_psid, res) => {
     }
   });
 }
-
-
-/**Using passing thread control from facebook API */
-let handleSendLiveChat = async (sender_psid) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      // Construct the message body
-      let request_body = {
-        recipient: {
-          id: sender_psid,
-        },
-        timestamp: 1458692752478,
-        pass_thread_control: {
-          new_owner_app_id: PAGE_INBOX_ID,
-          metadata: "Additional content that the caller wants to set",
-        },
-      };
-
-      await sendMarkReadMessage(sender_psid);
-      await sendTypingOn(sender_psid);
-
-      // Send the HTTP request to the Messenger Platform
-      request(
-        {
-          uri: "https://graph.facebook.com/v2.6/me/pass_thread_control",
-          qs: { access_token: PAGE_ACCESS_TOKEN },
-          method: "POST",
-          json: request_body,
-        },
-        (err, res, body) => {
-          if (!err) {
-            humanChat = true;
-            resolve("pass thread control successfully");
-          } else {
-            resolve("Unable to pass thread control:" + err);
-          }
-        }
-      );
-    } catch (e) {
-      reject(e);
-    }
-  });
-};
 
 let handleSendContactFormWebHook = async(response) => {
   return new Promise(async (resolve, reject) => {
